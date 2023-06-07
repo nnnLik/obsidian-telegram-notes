@@ -1,4 +1,4 @@
-from services.database import db
+from src.services.database import db
 
 
 class Account(db.Model):
