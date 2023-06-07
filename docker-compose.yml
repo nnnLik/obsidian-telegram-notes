@@ -7,10 +7,10 @@ services:
     container_name: bot
     env_file:
       - .env
+    volumes:
+    - ./alembic/versions/:/code/alembic/versions/
     depends_on:
       - db
-    volumes:
-      - ./main.py:/code/main.py
     restart: always
 
   db:
