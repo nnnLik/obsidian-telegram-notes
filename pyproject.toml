@@ -24,6 +24,7 @@ alembic = "^1.11.1"
 gino = "^1.0.1"
 psycopg2-binary = "^2.9.6"
 black = "^23.3.0"
+python-decouple = "^3.8"
 
 [build-system]
 requires = ["poetry-core"]
