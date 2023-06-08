@@ -1,40 +1,21 @@
 import logging
 
-from decouple import config
-
 from aiogram import executor
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher
 
-from src.models.base import Account
-from src.services.database import GinoConnection
+from src.handlers.start import cmd_start
+from src.utils.config import API_TOKEN
+from src.middlewares.logs import LoggingMiddleware
 
-API_TOKEN = "5937195123:AAEklPALiCkhQk6Z9jGQO1xOifxklVutgVU"
-
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
+dp.register_message_handler(cmd_start, commands=["start"])
 
-@dp.message_handler(commands=["start"])
-async def cmd_start(message: types.Message):
-    user_tg_id = message.from_user.id
-    
-    async with GinoConnection(config("POSTGRES_URL")) as db:
-        account = await Account.query.where(Account.tg_id == user_tg_id).gino.first()
-        print(1)
-        if account:
-            print(2)
-            logger.warning("Account already exists in the database.")
-        else:
-            print(3)
-            new_account = Account(tg_id=user_tg_id)
-            await new_account.create()
-            logger.warning("Account created.")
-
-    await message.reply("Hello")
-
+dp.middleware.setup(LoggingMiddleware())
 
 if __name__ == "__main__":
     executor.start_polling(dp, skip_updates=True)
