@@ -3,7 +3,7 @@ import logging
 from aiogram import executor
 from aiogram import Bot, Dispatcher
 
-from src.handlers.start import cmd_start
+from src.handlers.base import cmd_start, cmd_help
 from src.utils.config import API_TOKEN
 from src.middlewares.logs import LoggingMiddleware
 
@@ -14,6 +14,8 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 dp.register_message_handler(cmd_start, commands=["start"])
+dp.register_message_handler(cmd_help, commands=["help"])
+
 
 dp.middleware.setup(LoggingMiddleware())
 
